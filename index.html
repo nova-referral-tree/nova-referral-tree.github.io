@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova Talent — The Referral Tree</title>
+  <link rel="icon" type="image/jpeg" href="https://nova-events.github.io/favicon.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    :root {
+      --nova-accent: #0EB0A4;
+      --nova-accent-glow: rgba(14, 176, 164, 0.25);
+      --nova-bg-primary: #090E12;
+      --nova-bg-secondary: #131C24;
+      --nova-text-primary: #F0F2F5;
+      --nova-text-secondary: #9BA3AE;
+      --nova-border: rgba(255,255,255,0.08);
+      --nova-card-bg: #111920;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: var(--nova-bg-primary);
+      color: var(--nova-text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: -20%;
+      width: 1100px;
+      height: 1100px;
+      background: radial-gradient(circle, rgba(14,176,164,0.15) 0%, rgba(14,176,164,0.06) 30%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -20%;
+      right: -15%;
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, rgba(14,176,164,0.08) 0%, rgba(14,176,164,0.03) 35%, transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .logo-wrap img { height: 36px; }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .hero h1 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .accent {
+      color: var(--nova-accent);
+    }
+
+    .hero .subtitle {
+      color: var(--nova-text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 72px;
+    }
+
+    .stat-card {
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--nova-accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      color: var(--nova-text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    /* ── Section headers ── */
+    .section-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: var(--nova-text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* ── Chains ── */
+    .chains-section {
+      margin-bottom: 80px;
+    }
+
+    .chain {
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .chain-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--nova-accent);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+    }
+
+    .chain-nodes {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .chain-nodes::-webkit-scrollbar { height: 4px; }
+    .chain-nodes::-webkit-scrollbar-track { background: transparent; }
+    .chain-nodes::-webkit-scrollbar-thumb { background: var(--nova-bg-secondary); border-radius: 4px; }
+
+    .node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .node.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .node-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--nova-bg-secondary);
+      border: 2px solid var(--nova-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--nova-accent);
+      position: relative;
+    }
+
+    .node-circle.root {
+      background: var(--nova-accent);
+      color: var(--nova-bg-primary);
+      box-shadow: 0 0 20px var(--nova-accent-glow);
+    }
+
+    .node-name {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--nova-text-primary);
+      white-space: nowrap;
+      max-width: 80px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .connector {
+      flex-shrink: 0;
+      width: 40px;
+      height: 2px;
+      position: relative;
+      margin: 0 4px;
+      margin-bottom: 16px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .connector.visible {
+      opacity: 1;
+    }
+
+    .connector::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--nova-accent);
+      transition: width 0.6s ease;
+    }
+
+    .connector.visible::before {
+      width: 100%;
+    }
+
+    .connector::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid var(--nova-accent);
+      opacity: 0;
+      transition: opacity 0.3s ease 0.4s;
+    }
+
+    .connector.visible::after {
+      opacity: 1;
+    }
+
+    /* ── Quote ── */
+    .quote-section {
+      text-align: center;
+      margin-bottom: 80px;
+      padding: 48px 32px;
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+    }
+
+    .quote-icon {
+      color: var(--nova-accent);
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .quote-text {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 500;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .quote-author {
+      color: var(--nova-text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .quote-author strong {
+      color: var(--nova-accent);
+    }
+
+    /* ── How it works ── */
+    .how-section {
+      margin-bottom: 80px;
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .how-step {
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .how-step .material-icons {
+      font-size: 36px;
+      color: var(--nova-accent);
+      margin-bottom: 16px;
+    }
+
+    .how-step h3 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .how-step p {
+      color: var(--nova-text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .cta-section h2 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cta-section p {
+      color: var(--nova-text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 28px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--nova-accent);
+      color: var(--nova-bg-primary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px 36px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--nova-accent-glow);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--nova-border);
+      color: var(--nova-text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .footer a {
+      color: var(--nova-accent);
+      text-decoration: none;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 2rem; }
+      .stats { grid-template-columns: 1fr; gap: 12px; }
+      .how-steps { grid-template-columns: 1fr; }
+      .stat-card { padding: 20px 16px; }
+      .chain { padding: 24px 16px; }
+      .connector { width: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <img src="https://nova-events.github.io/nova-logo-white.png" alt="Nova">
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1>
+        One nomination.<br>
+        <span class="accent">An entire tree of talent.</span>
+      </h1>
+      <p class="subtitle">
+        Every time a member nominates someone to Nova, they plant a seed.
+        Some of those seeds grow into chains of 7, 8, even 9 people deep.
+        This is the story of how single nominations became forests.
+      </p>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-number">9</div>
+        <div class="stat-label">Longest chain<br>(people deep)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">6</div>
+        <div class="stat-label">Chains reaching<br>9 people</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">100+</div>
+        <div class="stat-label">Chains of 6+<br>people tracked</div>
+      </div>
+    </section>
+
+    <!-- Chains -->
+    <section class="chains-section">
+      <div class="section-header">
+        <h2>The longest chains</h2>
+        <p>Each circle is a real member. Each arrow is a nomination that brought someone new into Nova. Watch how one connection multiplied.</p>
+      </div>
+
+      <!-- Chain 1 — Silvia Jiménez Rodríguez (9 people) -->
+      <div class="chain" data-chain>
+        <div class="chain-label">Silvia's chain &mdash; 9 people</div>
+        <div class="chain-nodes">
+          <div class="node" data-delay="0">
+            <div class="node-circle root">SJ</div>
+            <div class="node-name">Silvia J.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="1">
+            <div class="node-circle">CJ</div>
+            <div class="node-name">Clara J.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="2">
+            <div class="node-circle">MG</div>
+            <div class="node-name">Mar G.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="3">
+            <div class="node-circle">CG</div>
+            <div class="node-name">Celia G.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="4">
+            <div class="node-circle">BS</div>
+            <div class="node-name">Belén S.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="5">
+            <div class="node-circle">MJ</div>
+            <div class="node-name">Macarena J.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="6">
+            <div class="node-circle">JI</div>
+            <div class="node-name">Jimena I.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="7">
+            <div class="node-circle">TF</div>
+            <div class="node-name">Teresa F.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="8">
+            <div class="node-circle">PG</div>
+            <div class="node-name">Patricia G.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 2 — Elías Casado Corral (9 people) -->
+      <div class="chain" data-chain>
+        <div class="chain-label">Elías's chain &mdash; 9 people</div>
+        <div class="chain-nodes">
+          <div class="node" data-delay="0">
+            <div class="node-circle root">EC</div>
+            <div class="node-name">Elías C.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="1">
+            <div class="node-circle">LB</div>
+            <div class="node-name">Lorenzo B.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="2">
+            <div class="node-circle">EL</div>
+            <div class="node-name">Eros L.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="3">
+            <div class="node-circle">LM</div>
+            <div class="node-name">Letizia M.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="4">
+            <div class="node-circle">JL</div>
+            <div class="node-name">Jacopo L.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="5">
+            <div class="node-circle">AC</div>
+            <div class="node-name">Alberto C.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="6">
+            <div class="node-circle">AT</div>
+            <div class="node-name">Andrea T.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="7">
+            <div class="node-circle">GT</div>
+            <div class="node-name">Giovanni T.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="8">
+            <div class="node-circle">GP</div>
+            <div class="node-name">Giovanni P.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 3 — Iole Francesca Felicetti (9 people) -->
+      <div class="chain" data-chain>
+        <div class="chain-label">Iole's chain &mdash; 9 people</div>
+        <div class="chain-nodes">
+          <div class="node" data-delay="0">
+            <div class="node-circle root">IF</div>
+            <div class="node-name">Iole F.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="1">
+            <div class="node-circle">GT</div>
+            <div class="node-name">Gianluca T.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="2">
+            <div class="node-circle">LL</div>
+            <div class="node-name">Liza L.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="3">
+            <div class="node-circle">MG</div>
+            <div class="node-name">Maria A. G.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="4">
+            <div class="node-circle">SF</div>
+            <div class="node-name">Stefano F.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="5">
+            <div class="node-circle">AB</div>
+            <div class="node-name">Andrea B.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="6">
+            <div class="node-circle">VZ</div>
+            <div class="node-name">Victor Z.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="7">
+            <div class="node-circle">SA</div>
+            <div class="node-name">Simone A.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="8">
+            <div class="node-circle">TT</div>
+            <div class="node-name">Teresa T.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 4 — Ander Galisteo (8 people) -->
+      <div class="chain" data-chain>
+        <div class="chain-label">Ander's chain &mdash; 8 people</div>
+        <div class="chain-nodes">
+          <div class="node" data-delay="0">
+            <div class="node-circle root">AG</div>
+            <div class="node-name">Ander G.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="1">
+            <div class="node-circle">CM</div>
+            <div class="node-name">Cristina M.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="2">
+            <div class="node-circle">AA</div>
+            <div class="node-name">Argimiro A.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="3">
+            <div class="node-circle">PV</div>
+            <div class="node-name">Pau V.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="4">
+            <div class="node-circle">GA</div>
+            <div class="node-name">Guillermo A.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="5">
+            <div class="node-circle">AL</div>
+            <div class="node-name">Antonio L.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="6">
+            <div class="node-circle">IC</div>
+            <div class="node-name">Iván C.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="7">
+            <div class="node-circle">AO</div>
+            <div class="node-name">Alex O.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 5 — Angus Núñez (7 people) -->
+      <div class="chain" data-chain>
+        <div class="chain-label">Angus's chain &mdash; 7 people</div>
+        <div class="chain-nodes">
+          <div class="node" data-delay="0">
+            <div class="node-circle root">AN</div>
+            <div class="node-name">Angus N.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="1">
+            <div class="node-circle">AO</div>
+            <div class="node-name">Ana O.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="2">
+            <div class="node-circle">DR</div>
+            <div class="node-name">Diego R.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="3">
+            <div class="node-circle">AS</div>
+            <div class="node-name">Amelie S.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="4">
+            <div class="node-circle">RG</div>
+            <div class="node-name">Rodrigo G.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="5">
+            <div class="node-circle">MS</div>
+            <div class="node-name">Miguel S.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="6">
+            <div class="node-circle">GS</div>
+            <div class="node-name">Gabriel S.</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Quote -->
+    <section class="quote-section">
+      <div class="quote-icon">"</div>
+      <p class="quote-text">
+        Connection is wealth. Every person you bring into Nova isn't just one connection. It's the start of a network you'll never fully see.
+      </p>
+      <p class="quote-author"><strong>Michele Artioli</strong>, Nova Member</p>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-section">
+      <div class="section-header">
+        <h2>How chains grow</h2>
+        <p>Every chain starts with one person who believed someone else deserved to be here.</p>
+      </div>
+      <div class="how-steps">
+        <div class="how-step">
+          <span class="material-icons">person_add</span>
+          <h3>You nominate</h3>
+          <p>You think of someone talented and nominate them to Nova.</p>
+        </div>
+        <div class="how-step">
+          <span class="material-icons">group</span>
+          <h3>They join and connect</h3>
+          <p>They get accepted, experience Gravity, events, mentoring. They see the value.</p>
+        </div>
+        <div class="how-step">
+          <span class="material-icons">account_tree</span>
+          <h3>They nominate too</h3>
+          <p>They bring in someone from their world. Your one nomination just became two. Then four. Then eight.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+      <h2>Start your own chain</h2>
+      <p>Your next nomination could be the first link in something extraordinary.</p>
+      <a href="https://app.novatalent.com/nominations" class="btn-primary">Nominate now</a>
+    </section>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Built by <a href="https://novatalent.com" target="_blank">Nova</a>. The merit-based professional network.</p>
+    </div>
+
+  </div>
+
+  <script>
+    function animateChain(chainEl) {
+      const nodes = chainEl.querySelectorAll('.node');
+      const connectors = chainEl.querySelectorAll('.connector');
+
+      nodes.forEach((node, i) => {
+        setTimeout(() => {
+          node.classList.add('visible');
+          if (connectors[i]) {
+            setTimeout(() => {
+              connectors[i].classList.add('visible');
+            }, 200);
+          }
+        }, i * 400);
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateChain(entry.target);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('[data-chain]').forEach(chain => {
+      observer.observe(chain);
+    });
+  </script>
+</body>
+</html>

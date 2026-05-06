@@ -282,6 +282,182 @@
       opacity: 1;
     }
 
+    /* ── Search ── */
+    .search-section { margin-bottom: 80px; }
+
+    .search-input-wrap {
+      position: relative;
+      max-width: 480px;
+      margin: 0 auto 40px;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 20px 16px 48px;
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+      color: var(--nova-text-primary);
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus { border-color: var(--nova-accent); }
+    .search-input::placeholder { color: var(--nova-text-secondary); }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--nova-text-secondary);
+      font-size: 20px;
+      pointer-events: none;
+    }
+
+    .search-dropdown {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+      max-height: 240px;
+      overflow-y: auto;
+      z-index: 10;
+      display: none;
+    }
+
+    .search-dropdown.open { display: block; }
+
+    .search-option {
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.15s;
+    }
+
+    .search-option:hover,
+    .search-option.active { background: rgba(14,176,164,0.08); }
+
+    .search-option mark {
+      color: var(--nova-accent);
+      background: none;
+      font-weight: 600;
+    }
+
+    /* ── Tree ── */
+    .tree-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      background: var(--nova-card-bg);
+      border: 1px solid var(--nova-border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      overflow-x: auto;
+    }
+
+    .tree-container.visible { display: flex; }
+
+    .tree-ancestors {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tree-n {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tree-n .node-circle {
+      width: 44px;
+      height: 44px;
+      font-size: 0.8rem;
+    }
+
+    .tree-n .node-name { font-size: 0.7rem; }
+
+    .tree-n.tree-selected .node-circle {
+      background: var(--nova-accent);
+      color: var(--nova-bg-primary);
+      box-shadow: 0 0 20px var(--nova-accent-glow);
+      width: 56px;
+      height: 56px;
+      font-size: 0.9rem;
+    }
+
+    .tree-n.tree-selected .node-name {
+      font-size: 0.8rem;
+      color: var(--nova-accent);
+      font-weight: 700;
+    }
+
+    .tree-vline {
+      width: 2px;
+      height: 24px;
+      background: var(--nova-accent);
+      flex-shrink: 0;
+    }
+
+    .tree-node-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tree-children {
+      display: flex;
+      justify-content: center;
+      position: relative;
+      padding-top: 24px;
+    }
+
+    .tree-child {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      padding: 0 16px;
+    }
+
+    .tree-child::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 2px;
+      height: 24px;
+      background: var(--nova-accent);
+      transform: translateX(-50%);
+    }
+
+    .tree-child::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 2px;
+      background: var(--nova-accent);
+    }
+
+    .tree-children > .tree-child:first-child::after { left: 50%; right: 0; }
+    .tree-children > .tree-child:last-child::after { left: 0; right: 50%; }
+    .tree-children > .tree-child:not(:first-child):not(:last-child)::after { left: 0; right: 0; }
+    .tree-children > .tree-child:only-child::after { display: none; }
+
+    .tree-no-results {
+      text-align: center;
+      color: var(--nova-text-secondary);
+      font-size: 0.9rem;
+      padding: 20px;
+    }
+
     /* ── How it works ── */
     .how-section {
       margin-bottom: 80px;
@@ -676,6 +852,20 @@
 
     </section>
 
+    <!-- Search your chain -->
+    <section class="search-section">
+      <div class="section-header">
+        <h2>Find your chain</h2>
+        <p>Search your name and see the full chain of nominations connected to you.</p>
+      </div>
+      <div class="search-input-wrap">
+        <span class="material-icons search-icon">search</span>
+        <input type="text" class="search-input" placeholder="Type your name..." autocomplete="off" id="chainSearch">
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+      <div class="tree-container" id="treeContainer"></div>
+    </section>
+
     <!-- How it works -->
     <section class="how-section">
       <div class="section-header">
@@ -744,6 +934,165 @@
     document.querySelectorAll('[data-chain]').forEach(chain => {
       observer.observe(chain);
     });
+
+    // ── Search & Tree ──
+    let graphData = null;
+    const nominatedBy = {};
+    const nomineesOf = {};
+    let nameIndex = [];
+
+    fetch('data.json')
+      .then(r => r.json())
+      .then(data => {
+        graphData = data;
+        for (const [from, to] of data.edges) {
+          const fromS = String(from), toS = String(to);
+          if (!nominatedBy[toS]) nominatedBy[toS] = [];
+          nominatedBy[toS].push(fromS);
+          if (!nomineesOf[fromS]) nomineesOf[fromS] = [];
+          nomineesOf[fromS].push(toS);
+        }
+        for (const [id, info] of Object.entries(data.nodes)) {
+          nameIndex.push({ id, name: info.name, short: info.short });
+        }
+        nameIndex.sort((a, b) => a.name.localeCompare(b.name));
+      });
+
+    const searchInput = document.getElementById('chainSearch');
+    const dropdown = document.getElementById('searchDropdown');
+    const treeContainer = document.getElementById('treeContainer');
+    let activeIdx = -1;
+
+    searchInput.addEventListener('input', () => {
+      const q = searchInput.value.trim().toLowerCase();
+      if (q.length < 2 || !graphData) { dropdown.classList.remove('open'); return; }
+      const matches = nameIndex.filter(n => n.name.toLowerCase().includes(q)).slice(0, 8);
+      if (!matches.length) { dropdown.classList.remove('open'); return; }
+      activeIdx = -1;
+      const esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      dropdown.innerHTML = matches.map((m, i) => {
+        const hl = m.name.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
+        return `<div class="search-option" data-id="${m.id}" data-idx="${i}">${hl}</div>`;
+      }).join('');
+      dropdown.classList.add('open');
+      dropdown.querySelectorAll('.search-option').forEach(opt => {
+        opt.addEventListener('click', () => selectPerson(opt.dataset.id));
+      });
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      const opts = dropdown.querySelectorAll('.search-option');
+      if (!opts.length) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, opts.length - 1); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); }
+      else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); selectPerson(opts[activeIdx].dataset.id); return; }
+      opts.forEach((o, i) => o.classList.toggle('active', i === activeIdx));
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-input-wrap')) dropdown.classList.remove('open');
+    });
+
+    function selectPerson(id) {
+      dropdown.classList.remove('open');
+      const node = graphData.nodes[id];
+      if (!node) return;
+      searchInput.value = node.name;
+      const ancestors = [];
+      let cur = id;
+      const visited = new Set([cur]);
+      while (ancestors.length < 15) {
+        const noms = nominatedBy[cur];
+        if (!noms || !noms.length) break;
+        const parent = noms.find(n => !visited.has(n));
+        if (!parent) break;
+        visited.add(parent);
+        ancestors.unshift(parent);
+        cur = parent;
+      }
+      renderTree(ancestors, id);
+    }
+
+    function getInitials(short) {
+      const p = short.split(' ');
+      return p.length < 2 ? (short[0] || '?') : (p[0][0] + p[p.length - 1][0]).toUpperCase();
+    }
+
+    function createNodeEl(nodeData, isSelected) {
+      const wrap = document.createElement('div');
+      wrap.className = 'tree-n' + (isSelected ? ' tree-selected' : '');
+      const circle = document.createElement('div');
+      circle.className = 'node-circle' + (isSelected ? ' root' : '');
+      circle.textContent = getInitials(nodeData.short);
+      const name = document.createElement('div');
+      name.className = 'node-name';
+      name.textContent = nodeData.short;
+      wrap.appendChild(circle);
+      wrap.appendChild(name);
+      return wrap;
+    }
+
+    function renderTree(ancestors, selectedId) {
+      treeContainer.innerHTML = '';
+      treeContainer.classList.add('visible');
+
+      const ancestorsDiv = document.createElement('div');
+      ancestorsDiv.className = 'tree-ancestors';
+      ancestors.forEach(aid => {
+        const n = graphData.nodes[aid];
+        if (!n) return;
+        ancestorsDiv.appendChild(createNodeEl(n, false));
+        const vl = document.createElement('div');
+        vl.className = 'tree-vline';
+        ancestorsDiv.appendChild(vl);
+      });
+      const sel = graphData.nodes[selectedId];
+      ancestorsDiv.appendChild(createNodeEl(sel, true));
+      treeContainer.appendChild(ancestorsDiv);
+
+      const kids = nomineesOf[selectedId];
+      if (kids && kids.length) {
+        const vl = document.createElement('div');
+        vl.className = 'tree-vline';
+        treeContainer.appendChild(vl);
+        const desc = buildDescendants(selectedId, new Set([...ancestors, selectedId]), 0);
+        if (desc) treeContainer.appendChild(desc);
+      }
+      treeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function buildDescendants(parentId, visited, depth) {
+      if (depth > 8) return null;
+      const kids = nomineesOf[parentId];
+      if (!kids || !kids.length) return null;
+      const wrap = document.createElement('div');
+      wrap.className = 'tree-children';
+      let count = 0;
+      kids.forEach(kidId => {
+        if (visited.has(kidId)) return;
+        const kidNode = graphData.nodes[kidId];
+        if (!kidNode) return;
+        const childEl = document.createElement('div');
+        childEl.className = 'tree-child';
+        const group = document.createElement('div');
+        group.className = 'tree-node-group';
+        group.appendChild(createNodeEl(kidNode, false));
+        const newV = new Set(visited);
+        newV.add(kidId);
+        const grandKids = nomineesOf[kidId];
+        if (grandKids && grandKids.length) {
+          const vl = document.createElement('div');
+          vl.className = 'tree-vline';
+          group.appendChild(vl);
+          const gc = buildDescendants(kidId, newV, depth + 1);
+          if (gc) group.appendChild(gc);
+        }
+        childEl.appendChild(group);
+        wrap.appendChild(childEl);
+        count++;
+      });
+      return count ? wrap : null;
+    }
   </script>
 </body>
 </html>

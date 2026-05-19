@@ -170,6 +170,13 @@
       color: var(--nova-accent);
       text-transform: uppercase;
       letter-spacing: 1.5px;
+      margin-bottom: 6px;
+    }
+
+    .chain-tagline {
+      color: var(--nova-text-secondary);
+      font-size: 0.85rem;
+      font-style: italic;
       margin-bottom: 20px;
     }
 
@@ -283,8 +290,6 @@
     }
 
     /* ── Search ── */
-    .search-section { margin-bottom: 80px; }
-
     .search-input-wrap {
       position: relative;
       max-width: 480px;
@@ -352,103 +357,108 @@
     /* ── Tree ── */
     .tree-container {
       display: none;
-      flex-direction: column;
-      align-items: center;
-      background: var(--nova-card-bg);
+      justify-content: center;
+      align-items: flex-start;
+      gap: 0;
+      background: linear-gradient(135deg, rgba(17,25,32,0.95) 0%, rgba(9,14,18,0.98) 100%);
       border: 1px solid var(--nova-border);
       border-radius: var(--radius);
-      padding: 32px 28px;
+      padding: 20px 16px;
       overflow-x: auto;
+      margin-top: 16px;
     }
 
     .tree-container.visible { display: flex; }
 
     .tree-ancestors {
       display: flex;
-      flex-direction: column;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .tree-n {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 3px;
+      flex-shrink: 0;
     }
 
     .tree-n .node-circle {
+      width: 36px;
+      height: 36px;
+      font-size: 0.7rem;
+      border-width: 1.5px;
+    }
+
+    .tree-n .node-name { font-size: 0.65rem; max-width: 64px; }
+
+    .tree-n.tree-selected .node-circle {
+      background: var(--nova-accent);
+      color: var(--nova-bg-primary);
+      box-shadow: 0 0 24px var(--nova-accent-glow), 0 0 48px rgba(14,176,164,0.15);
       width: 44px;
       height: 44px;
       font-size: 0.8rem;
     }
 
-    .tree-n .node-name { font-size: 0.7rem; }
-
-    .tree-n.tree-selected .node-circle {
-      background: var(--nova-accent);
-      color: var(--nova-bg-primary);
-      box-shadow: 0 0 20px var(--nova-accent-glow);
-      width: 56px;
-      height: 56px;
-      font-size: 0.9rem;
-    }
-
     .tree-n.tree-selected .node-name {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--nova-accent);
       font-weight: 700;
     }
 
     .tree-vline {
-      width: 2px;
-      height: 24px;
-      background: var(--nova-accent);
+      width: 20px;
+      height: 1.5px;
+      background: linear-gradient(90deg, rgba(14,176,164,0.3), var(--nova-accent));
       flex-shrink: 0;
+      margin: 0 2px;
+      align-self: center;
     }
 
     .tree-node-group {
       display: flex;
-      flex-direction: column;
       align-items: center;
     }
 
     .tree-children {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       position: relative;
-      padding-top: 24px;
+      padding-left: 18px;
     }
 
     .tree-child {
       display: flex;
-      flex-direction: column;
       align-items: center;
       position: relative;
-      padding: 0 16px;
+      padding: 4px 0;
     }
 
     .tree-child::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 50%;
-      width: 2px;
-      height: 24px;
-      background: var(--nova-accent);
-      transform: translateX(-50%);
+      left: 0;
+      top: 50%;
+      height: 1.5px;
+      width: 18px;
+      background: linear-gradient(90deg, rgba(14,176,164,0.3), var(--nova-accent));
+      transform: translateY(-50%);
     }
 
     .tree-child::after {
       content: '';
       position: absolute;
-      top: 0;
-      height: 2px;
-      background: var(--nova-accent);
+      left: 0;
+      width: 1.5px;
+      background: rgba(14,176,164,0.3);
     }
 
-    .tree-children > .tree-child:first-child::after { left: 50%; right: 0; }
-    .tree-children > .tree-child:last-child::after { left: 0; right: 50%; }
-    .tree-children > .tree-child:not(:first-child):not(:last-child)::after { left: 0; right: 0; }
+    .tree-children > .tree-child:first-child::after { top: 50%; bottom: 0; }
+    .tree-children > .tree-child:last-child::after { top: 0; bottom: 50%; }
+    .tree-children > .tree-child:not(:first-child):not(:last-child)::after { top: 0; bottom: 0; }
     .tree-children > .tree-child:only-child::after { display: none; }
 
     .tree-no-results {
@@ -547,6 +557,105 @@
       text-decoration: none;
     }
 
+    /* ── CTA extras ── */
+    .cta-incentives {
+      font-size: 0.85rem !important;
+      color: var(--nova-text-secondary) !important;
+      margin-top: 20px !important;
+      margin-bottom: 8px !important;
+    }
+    .cta-contest {
+      font-size: 0.85rem !important;
+      margin-bottom: 0 !important;
+    }
+    .cta-contest a {
+      color: var(--nova-accent);
+      text-decoration: none;
+    }
+    .cta-contest a:hover { text-decoration: underline; }
+
+    /* ── Network visualization ── */
+    .network-section { margin-bottom: 80px; }
+
+    .network-wrap {
+      position: relative;
+      width: 100%;
+      height: 550px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--nova-border);
+      background: #080C10;
+      margin-bottom: 24px;
+    }
+
+    .network-wrap canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .network-overlay {
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      width: 320px;
+    }
+
+    .network-overlay .search-input-wrap {
+      background: rgba(9, 14, 18, 0.85);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      border: 1px solid var(--nova-border);
+    }
+
+    .network-hint {
+      text-align: center;
+      color: var(--nova-text-secondary);
+      font-size: 0.75rem;
+      margin-top: 8px;
+      opacity: 0.7;
+    }
+
+    .network-stats {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      z-index: 10;
+      display: flex;
+      gap: 16px;
+    }
+
+    .net-stat {
+      font-size: 0.7rem;
+      color: var(--nova-text-secondary);
+      opacity: 0.6;
+    }
+    .net-stat strong {
+      color: var(--nova-accent);
+      font-weight: 700;
+    }
+
+    .network-reset {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      z-index: 10;
+      background: rgba(9,14,18,0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--nova-border);
+      border-radius: 8px;
+      padding: 6px 14px;
+      color: var(--nova-text-secondary);
+      font-size: 0.75rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      display: none;
+      transition: color 0.2s;
+    }
+    .network-reset:hover { color: var(--nova-accent); }
+
     /* ── Responsive ── */
     @media (max-width: 700px) {
       .hero h1 { font-size: 2rem; }
@@ -555,6 +664,9 @@
       .stat-card { padding: 20px 16px; }
       .chain { padding: 24px 16px; }
       .connector { width: 24px; }
+      .network-wrap { height: 400px; }
+      .network-overlay { width: 280px; }
+      .network-stats { display: none; }
     }
   </style>
 </head>
@@ -580,15 +692,15 @@
     <!-- Stats -->
     <section class="stats">
       <div class="stat-card">
-        <div class="stat-number">9</div>
-        <div class="stat-label">Longest chain<br>(people deep)</div>
+        <div class="stat-number">8</div>
+        <div class="stat-label">members in the<br>longest chain</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">5</div>
-        <div class="stat-label">Chains reaching<br>9 people</div>
+        <div class="stat-number">3</div>
+        <div class="stat-label">Chains reaching<br>8 people</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number">106</div>
+        <div class="stat-number">29</div>
         <div class="stat-label">Chains of 6+<br>people tracked</div>
       </div>
     </section>
@@ -600,60 +712,10 @@
         <p>Each circle is a real member. Each arrow is a nomination. This is how one connection turned into many.</p>
       </div>
 
-      <!-- Chain 1 — Sof&iacute;a Poch (9 people) -->
+      <!-- Chain 1 — Silvia Jiménez Rodríguez (8 people) -->
       <div class="chain" data-chain>
-        <div class="chain-label">Sof&iacute;a's chain &mdash; 9 people</div>
-        <div class="chain-nodes">
-          <div class="node" data-delay="0">
-            <div class="node-circle root">SP</div>
-            <div class="node-name">Sof&iacute;a P.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="1">
-            <div class="node-circle">DT</div>
-            <div class="node-name">Daniil T.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="2">
-            <div class="node-circle">DQ</div>
-            <div class="node-name">Damiano Q.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="3">
-            <div class="node-circle">DS</div>
-            <div class="node-name">Dario S.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="4">
-            <div class="node-circle">AR</div>
-            <div class="node-name">Antonio R.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="5">
-            <div class="node-circle">EB</div>
-            <div class="node-name">Edoardo B.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="6">
-            <div class="node-circle">LD</div>
-            <div class="node-name">Luigi D.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="7">
-            <div class="node-circle">RD</div>
-            <div class="node-name">Riccardo D.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="8">
-            <div class="node-circle">RC</div>
-            <div class="node-name">Riccardo C.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Chain 2 — Silvia Jim&eacute;nez Rodr&iacute;guez (9 people) -->
-      <div class="chain" data-chain>
-        <div class="chain-label">Silvia's chain &mdash; 9 people</div>
+        <div class="chain-label">Silvia's chain ·8 people</div>
+        <div class="chain-tagline">It started between two sisters. It didn't stop there.</div>
         <div class="chain-nodes">
           <div class="node" data-delay="0">
             <div class="node-circle root">SJ</div>
@@ -694,17 +756,13 @@
             <div class="node-circle">TF</div>
             <div class="node-name">Teresa F.</div>
           </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="8">
-            <div class="node-circle">PG</div>
-            <div class="node-name">Patricia G.</div>
-          </div>
         </div>
       </div>
 
-      <!-- Chain 3 — Iole Francesca Felicetti (9 people) -->
+      <!-- Chain 2 — Iole Francesca Felicetti (8 people) -->
       <div class="chain" data-chain>
-        <div class="chain-label">Iole's chain &mdash; 9 people</div>
+        <div class="chain-label">Iole's chain ·8 people</div>
+        <div class="chain-tagline">One of the earliest chains, growing steadily through Italy for over 2.5 years.</div>
         <div class="chain-nodes">
           <div class="node" data-delay="0">
             <div class="node-circle root">IF</div>
@@ -742,71 +800,63 @@
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="7">
-            <div class="node-circle">SA</div>
-            <div class="node-name">Simone A.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="8">
-            <div class="node-circle">TT</div>
-            <div class="node-name">Teresa T.</div>
+            <div class="node-circle">SC</div>
+            <div class="node-name">Simone A. C.</div>
           </div>
         </div>
       </div>
 
-      <!-- Chain 4 — El&iacute;as Casado Corral (9 people) -->
+      <!-- Chain 3 — Cesare Magnetti (8 people) -->
       <div class="chain" data-chain>
-        <div class="chain-label">El&iacute;as's chain &mdash; 9 people</div>
+        <div class="chain-label">Cesare's chain ·8 people</div>
+        <div class="chain-tagline">From Italy to France to India. The most international chain in the network.</div>
         <div class="chain-nodes">
           <div class="node" data-delay="0">
-            <div class="node-circle root">EC</div>
-            <div class="node-name">El&iacute;as C.</div>
+            <div class="node-circle root">CM</div>
+            <div class="node-name">Cesare M.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="1">
-            <div class="node-circle">LB</div>
-            <div class="node-name">Lorenzo B.</div>
+            <div class="node-circle">GM</div>
+            <div class="node-name">Gaia M.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="2">
-            <div class="node-circle">EL</div>
-            <div class="node-name">Eros L.</div>
+            <div class="node-circle">PM</div>
+            <div class="node-name">Paul M. D.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="3">
-            <div class="node-circle">LM</div>
-            <div class="node-name">Letizia M.</div>
+            <div class="node-circle">MF</div>
+            <div class="node-name">Massimiliano F.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="4">
-            <div class="node-circle">JL</div>
-            <div class="node-name">Jacopo L.</div>
+            <div class="node-circle">LC</div>
+            <div class="node-name">Lorenzo C.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="5">
-            <div class="node-circle">AC</div>
-            <div class="node-name">Alberto C.</div>
+            <div class="node-circle">DZ</div>
+            <div class="node-name">Dhruvi Z.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="6">
-            <div class="node-circle">AT</div>
-            <div class="node-name">Andrea T.</div>
+            <div class="node-circle">PB</div>
+            <div class="node-name">Prahalad B.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="7">
-            <div class="node-circle">GT</div>
-            <div class="node-name">Giovanni T.</div>
-          </div>
-          <div class="connector"></div>
-          <div class="node" data-delay="8">
-            <div class="node-circle">GP</div>
-            <div class="node-name">Giovanni P.</div>
+            <div class="node-circle">MU</div>
+            <div class="node-name">Muskaan U.</div>
           </div>
         </div>
       </div>
 
-      <!-- Chain 5 — Ander Galisteo (8 people) -->
+      <!-- Chain 4 — Ander Galisteo (7 people, 5 branches) -->
       <div class="chain" data-chain>
-        <div class="chain-label">Ander's chain &mdash; 8 people</div>
+        <div class="chain-label">Ander's chain ·7 people, 5 branches</div>
+        <div class="chain-tagline">One nomination spawned 5 independent branches reaching 7 people each.</div>
         <div class="chain-nodes">
           <div class="node" data-delay="0">
             <div class="node-circle root">AG</div>
@@ -819,49 +869,96 @@
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="2">
-            <div class="node-circle">AA</div>
-            <div class="node-name">Argimiro A.</div>
+            <div class="node-circle">AO</div>
+            <div class="node-name">Andr&eacute;s O.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="3">
-            <div class="node-circle">PV</div>
-            <div class="node-name">Pau V.</div>
+            <div class="node-circle">EB</div>
+            <div class="node-name">Emilio B.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="4">
-            <div class="node-circle">GA</div>
-            <div class="node-name">Guillermo A.</div>
+            <div class="node-circle">HT</div>
+            <div class="node-name">Hertha T.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="5">
-            <div class="node-circle">AL</div>
-            <div class="node-name">Antonio L.</div>
+            <div class="node-circle">NH</div>
+            <div class="node-name">Noem&iacute; H.</div>
           </div>
           <div class="connector"></div>
           <div class="node" data-delay="6">
-            <div class="node-circle">IC</div>
-            <div class="node-name">Iv&aacute;n C.</div>
+            <div class="node-circle">LD</div>
+            <div class="node-name">Luba D.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chain 5 — Noemi Gamba (7 people) -->
+      <div class="chain" data-chain>
+        <div class="chain-label">Noemi's chain ·7 people</div>
+        <div class="chain-tagline">A chain that grew organically through the Italian community.</div>
+        <div class="chain-nodes">
+          <div class="node" data-delay="0">
+            <div class="node-circle root">NG</div>
+            <div class="node-name">Noemi G.</div>
           </div>
           <div class="connector"></div>
-          <div class="node" data-delay="7">
-            <div class="node-circle">AO</div>
-            <div class="node-name">Alex O.</div>
+          <div class="node" data-delay="1">
+            <div class="node-circle">MN</div>
+            <div class="node-name">Marco N.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="2">
+            <div class="node-circle">GR</div>
+            <div class="node-name">Giuseppe R.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="3">
+            <div class="node-circle">EM</div>
+            <div class="node-name">Enrico M.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="4">
+            <div class="node-circle">DP</div>
+            <div class="node-name">Daniele P.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="5">
+            <div class="node-circle">ET</div>
+            <div class="node-name">Emily T.</div>
+          </div>
+          <div class="connector"></div>
+          <div class="node" data-delay="6">
+            <div class="node-circle">EC</div>
+            <div class="node-name">Edoardo C.</div>
           </div>
         </div>
       </div>
 
     </section>
 
-    <!-- Search your chain -->
-    <section class="search-section">
+    <!-- Network visualization + Search -->
+    <section class="network-section">
       <div class="section-header">
         <h2>Find your chain</h2>
-        <p>Search your name and see the full chain of nominations connected to you.</p>
+        <p>Every member is part of a chain. Search your name and see who you brought to Nova — and who came after.</p>
       </div>
-      <div class="search-input-wrap">
-        <span class="material-icons search-icon">search</span>
-        <input type="text" class="search-input" placeholder="Type your name..." autocomplete="off" id="chainSearch">
-        <div class="search-dropdown" id="searchDropdown"></div>
+      <div class="network-wrap">
+        <canvas id="networkCanvas"></canvas>
+        <div class="network-overlay">
+          <div class="search-input-wrap">
+            <span class="material-icons search-icon">search</span>
+            <input type="text" class="search-input" placeholder="Type your name..." autocomplete="off" id="chainSearch">
+            <div class="search-dropdown" id="searchDropdown"></div>
+          </div>
+        </div>
+        <div class="network-stats">
+          <div class="net-stat"><strong>12,870</strong> members</div>
+          <div class="net-stat"><strong>10,926</strong> connections</div>
+        </div>
+        <button class="network-reset" id="resetBtn" onclick="resetView()">Reset view</button>
       </div>
       <div class="tree-container" id="treeContainer"></div>
     </section>
@@ -896,6 +993,8 @@
       <h2>Start your own chain</h2>
       <p>Think of someone who'd benefit from being part of Nova. One nomination is all it takes.</p>
       <a href="https://app.novatalent.com/nominate" target="_blank" rel="noopener" class="btn-primary">Nominate now</a>
+      <p class="cta-incentives">When your nominee becomes a member, you earn 350 points — enough to attend Nova events for free.</p>
+      <p class="cta-contest">Plus, every nomination is an entry to win a free spot at <a href="https://nova-experience.github.io/" target="_blank" rel="noopener">The Nova Experience in Milan</a>.</p>
     </section>
 
     <!-- Footer -->
@@ -935,11 +1034,243 @@
       observer.observe(chain);
     });
 
-    // ── Search & Tree ──
+    // ── Network Canvas + Search & Tree ──
     let graphData = null;
     const nominatedBy = {};
     const nomineesOf = {};
     let nameIndex = [];
+
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let cam = { x: 0, y: 0, scale: 1 };
+    let targetCam = null;
+    let selectedId = null;
+    let dataW = 4000, dataH = 3000;
+
+    function initCanvas() {
+      const r = window.devicePixelRatio || 1;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * r;
+      canvas.height = rect.height * r;
+      ctx.setTransform(r, 0, 0, r, 0, 0);
+      cam.viewW = rect.width;
+      cam.viewH = rect.height;
+      const sx = cam.viewW / dataW;
+      const sy = cam.viewH / dataH;
+      cam.scale = Math.min(sx, sy) * 0.92;
+      cam.x = (cam.viewW - dataW * cam.scale) / 2;
+      cam.y = (cam.viewH - dataH * cam.scale) / 2;
+    }
+
+    function draw() {
+      if (!graphData) return;
+      ctx.clearRect(0, 0, cam.viewW, cam.viewH);
+      ctx.save();
+      ctx.translate(cam.x, cam.y);
+      ctx.scale(cam.scale, cam.scale);
+
+      const highlightEdges = new Set();
+      if (selectedId) {
+        const sid = String(selectedId);
+        for (let i = 0; i < graphData.edges.length; i++) {
+          const e = graphData.edges[i];
+          if (String(e[0]) === sid || String(e[1]) === sid) highlightEdges.add(i);
+        }
+      }
+
+      ctx.lineWidth = 0.5 / cam.scale;
+      ctx.strokeStyle = 'rgba(14,176,164,0.06)';
+      ctx.beginPath();
+      for (let i = 0; i < graphData.edges.length; i++) {
+        if (highlightEdges.has(i)) continue;
+        const e = graphData.edges[i];
+        const a = graphData.nodes[String(e[0])];
+        const b = graphData.nodes[String(e[1])];
+        if (!a || !b || a.x == null || b.x == null) continue;
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+      }
+      ctx.stroke();
+
+      if (highlightEdges.size) {
+        ctx.lineWidth = 2 / cam.scale;
+        ctx.strokeStyle = 'rgba(14,176,164,0.7)';
+        ctx.beginPath();
+        for (const i of highlightEdges) {
+          const e = graphData.edges[i];
+          const a = graphData.nodes[String(e[0])];
+          const b = graphData.nodes[String(e[1])];
+          if (!a || !b || a.x == null || b.x == null) continue;
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+        }
+        ctx.stroke();
+      }
+
+      const nodeR = selectedId ? 3 / cam.scale : 1.5 / cam.scale;
+      for (const [id, n] of Object.entries(graphData.nodes)) {
+        if (n.x == null) continue;
+        const isSel = id === String(selectedId);
+        const isConn = selectedId && (
+          (nominatedBy[id] && nominatedBy[id].includes(String(selectedId))) ||
+          (nomineesOf[id] && nomineesOf[id].includes(String(selectedId))) ||
+          (nominatedBy[String(selectedId)] && nominatedBy[String(selectedId)].includes(id)) ||
+          (nomineesOf[String(selectedId)] && nomineesOf[String(selectedId)].includes(id))
+        );
+        if (isSel) {
+          ctx.fillStyle = '#0EB0A4';
+          ctx.shadowColor = 'rgba(14,176,164,0.8)';
+          ctx.shadowBlur = 20 / cam.scale;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 8 / cam.scale, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          ctx.fillStyle = '#F0F2F5';
+          ctx.font = `${Math.round(11 / cam.scale)}px DM Sans`;
+          ctx.textAlign = 'center';
+          ctx.fillText(n.short, n.x, n.y - 14 / cam.scale);
+        } else if (isConn) {
+          ctx.fillStyle = 'rgba(14,176,164,0.9)';
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, 4 / cam.scale, 0, Math.PI * 2);
+          ctx.fill();
+          if (cam.scale > 0.5) {
+            ctx.fillStyle = 'rgba(240,242,245,0.7)';
+            ctx.font = `${Math.round(9 / cam.scale)}px DM Sans`;
+            ctx.textAlign = 'center';
+            ctx.fillText(n.short, n.x, n.y - 8 / cam.scale);
+          }
+        } else {
+          ctx.fillStyle = selectedId ? 'rgba(14,176,164,0.08)' : 'rgba(14,176,164,0.25)';
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, nodeR, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    let animFrame = null;
+    function animateCam() {
+      if (!targetCam) return;
+      const ease = 0.08;
+      cam.x += (targetCam.x - cam.x) * ease;
+      cam.y += (targetCam.y - cam.y) * ease;
+      cam.scale += (targetCam.scale - cam.scale) * ease;
+      const dx = Math.abs(targetCam.x - cam.x);
+      const dy = Math.abs(targetCam.y - cam.y);
+      const ds = Math.abs(targetCam.scale - cam.scale);
+      draw();
+      if (dx > 0.5 || dy > 0.5 || ds > 0.0001) {
+        animFrame = requestAnimationFrame(animateCam);
+      } else {
+        cam.x = targetCam.x;
+        cam.y = targetCam.y;
+        cam.scale = targetCam.scale;
+        targetCam = null;
+        draw();
+      }
+    }
+
+    function zoomToNode(id) {
+      const n = graphData.nodes[String(id)];
+      if (!n || n.x == null) return;
+      const zoomScale = cam.viewW / 600;
+      targetCam = {
+        scale: zoomScale,
+        x: cam.viewW / 2 - n.x * zoomScale,
+        y: cam.viewH / 2 - n.y * zoomScale
+      };
+      if (animFrame) cancelAnimationFrame(animFrame);
+      animFrame = requestAnimationFrame(animateCam);
+      resetBtn.style.display = 'block';
+    }
+
+    function resetView() {
+      selectedId = null;
+      treeContainer.innerHTML = '';
+      treeContainer.classList.remove('visible');
+      searchInput.value = '';
+      const sx = cam.viewW / dataW;
+      const sy = cam.viewH / dataH;
+      targetCam = {
+        scale: Math.min(sx, sy) * 0.92,
+        x: (cam.viewW - dataW * (Math.min(sx, sy) * 0.92)) / 2,
+        y: (cam.viewH - dataH * (Math.min(sx, sy) * 0.92)) / 2
+      };
+      if (animFrame) cancelAnimationFrame(animFrame);
+      animFrame = requestAnimationFrame(animateCam);
+      resetBtn.style.display = 'none';
+    }
+
+    // ── Pan & Zoom ──
+    let isDragging = false;
+    let dragStart = { x: 0, y: 0 };
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      dragStart = { x: e.clientX - cam.x, y: e.clientY - cam.y };
+      canvas.style.cursor = 'grabbing';
+      targetCam = null;
+      if (animFrame) cancelAnimationFrame(animFrame);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      cam.x = e.clientX - dragStart.x;
+      cam.y = e.clientY - dragStart.y;
+      draw();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        canvas.style.cursor = 'grab';
+      }
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const zoom = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+      const newScale = cam.scale * zoom;
+      cam.x = mx - (mx - cam.x) * zoom;
+      cam.y = my - (my - cam.y) * zoom;
+      cam.scale = newScale;
+      targetCam = null;
+      draw();
+      resetBtn.style.display = 'block';
+    }, { passive: false });
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        isDragging = true;
+        const t = e.touches[0];
+        dragStart = { x: t.clientX - cam.x, y: t.clientY - cam.y };
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!isDragging || e.touches.length !== 1) return;
+      const t = e.touches[0];
+      cam.x = t.clientX - dragStart.x;
+      cam.y = t.clientY - dragStart.y;
+      draw();
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', () => { isDragging = false; });
+
+    canvas.style.cursor = 'grab';
+
+    window.addEventListener('resize', () => {
+      initCanvas();
+      draw();
+    });
 
     fetch('data.json')
       .then(r => r.json())
@@ -956,6 +1287,8 @@
           nameIndex.push({ id, name: info.name, short: info.short });
         }
         nameIndex.sort((a, b) => a.name.localeCompare(b.name));
+        initCanvas();
+        draw();
       });
 
     const searchInput = document.getElementById('chainSearch');
@@ -998,6 +1331,8 @@
       const node = graphData.nodes[id];
       if (!node) return;
       searchInput.value = node.name;
+      selectedId = id;
+      zoomToNode(id);
       const ancestors = [];
       let cur = id;
       const visited = new Set([cur]);
